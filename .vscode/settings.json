@@ -91,7 +91,7 @@
         "*.webpack.js": "webpack"
     },
     
-    "workbench.colorTheme": "Vue Theme",
+    "workbench.colorTheme": "Shades of Purple",
     "window.menuBarVisibility": "toggle",
     "typescript.updateImportsOnFileMove.enabled": "never",
     "tabnine.experimentalAutoImports": true,
@@ -124,5 +124,6 @@
     "cSpell.userWords": [
         "rocketseat"
     ],
-    "javascript.updateImportsOnFileMove.enabled": "always"
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "fiveServer.port": 3000
 }

@@ -8,6 +8,12 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 import styles from './home.module.scss';
 import { usePlayer } from '../contexts/PlayerContext';
+import { useState, useEffect } from 'react';
+import React from "react";
+import UseAnimations from 'react-useanimations';
+import activity from 'react-useanimations/lib/activity';
+import { FiActivity } from 'react-icons/fi';
+import { IoIosPause } from 'react-icons/io';
 
 //Dicas para levar o projeto a um próximo nível:
 //1 - Deixar o projeto Responsivo
@@ -27,15 +33,19 @@ type Episode =
     publishedAt: string;
   }
 
-
 type HomeProps = {
   latestEpisodes: Array<Episode>;
   allEpisodes: Array<Episode>
 }
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
-  const { playList } = usePlayer();
-
+  const {
+    playList,
+    isPlaying,
+    togglePlay,
+    currentEpisodeIndex
+  } = usePlayer();
   const episodeList = [...latestEpisodes, ...allEpisodes];
+
   return (
     <div className={styles.homepage}>
       <Head>
@@ -65,9 +75,33 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                     <span>{episode.publishedAt}</span>
                     <span>{episode.durationAsString}</span>
                   </div>
-                  <button type="button" onClick={() => { playList(episodeList, index) }}>
-                    <img src="/play-green.svg" alt="Tocar episódio" />
-                  </button>
+                  {isPlaying && index === currentEpisodeIndex ? (
+                    <div className={styles.playCard}>
+                      <button type="button" onClick={togglePlay}>
+                        <IoIosPause
+                          size={25}
+                          color='#0cf42b'
+                        />
+                      </button>
+                      <UseAnimations
+                        animation={activity}
+                        strokeColor='#0cf42b'
+                        autoplay={false}
+                        size={30}
+                        style={{ padding: 100 }}
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.playCard}>
+                      <button type="button" onClick={() => { playList(episodeList, index) }}>
+                        <img src="/play-green.svg" alt="Tocar episódio" />
+                      </button>
+                      <FiActivity
+                        size={25}
+                      />
+                    </div>
+                  )
+                  }
                 </li>
               );
             })
@@ -112,9 +146,33 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                     <td style={{ width: 100 }}>{episode.publishedAt}</td>
                     <td>{episode.durationAsString}</td>
                     <td>
-                      <button type="button" onClick={() => { playList(episodeList, index + latestEpisodes.length) }}>
-                        <img src="/play-green.svg" alt="Tocar episódio" />
-                      </button>
+                      {isPlaying && (index + latestEpisodes.length) === currentEpisodeIndex ? (
+                        <div className={styles.playCard}>
+                          <button type="button" onClick={togglePlay}>
+                            <IoIosPause
+                              size={25}
+                              color='#0cf42b'
+                            />
+                          </button>
+                          <UseAnimations
+                            animation={activity}
+                            strokeColor='#0cf42b'
+                            autoplay={false}
+                            size={30}
+                            style={{ padding: 100 }}
+                          />
+                        </div>
+                      ) : (
+                        <div className={styles.playCard}>
+                          <button type="button" onClick={() => { playList(episodeList, (index + latestEpisodes.length)) }}>
+                            <img src="/play-green.svg" alt="Tocar episódio" />
+                          </button>
+                          <FiActivity
+                            size={25}
+                          />
+                        </div>
+                      )
+                      }
                     </td>
                   </tr>
                 )
